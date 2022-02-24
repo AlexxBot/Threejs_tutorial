@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+
+<body>
+    <!-- <script src="js/three.js" ></script> -->
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'></script> -->
+
+    <script type="module">
+        import * as THREE from './js/three.module.js'
+        import { OrbitControls } from './js/OrbitControls.js'
+        //create a scene
+        const scene = new THREE.Scene();
+        //scene.background = new THREE.Color(0X2a3b2c)
+        //scene.fog = new THREE.Fog(0x748845, 0.1, 8)
+        const loader = new THREE.TextureLoader()
+        /* loader.load('../assets/background.jpg', function(texture) {
+            scene.background = texture
+        }) */
+
+
+        //Setting up the camera
+        //There are a few  differents types of camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+
+        //const newCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 3, 10);
+
+        //const newCamera = new THREE.OrthographicCamera(5,-5,5,-5, 3, 10);
+
+        //const helper = new THREE.CameraHelper(newCamera)
+
+        //scene.add(helper)
+
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+
+        //geometries
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2, 3, 3, 3);
+        const material = new THREE.MeshBasicMaterial({ color: 0Xff0000, wireframe: true });
+
+        const cube = new THREE.Mesh(geometry, material);
+        //adding the cube to the scene
+        scene.add(cube);
+
+
+        const circle = new THREE.Mesh(new THREE.CircleGeometry(2, 50, 0, Math.PI), material)
+        circle.position.x = 5
+        scene.add(circle)
+
+        var object = new THREE.Mesh(new THREE.ConeGeometry(1, 2, 50, 5, true, 0, Math.PI ), material)
+        object.position.x = -5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 2, 25, 10, true), material)
+        object.position.y = 5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.PlaneGeometry(2,2, 4, 4), material)
+        object.position.y = -5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.TetrahedronGeometry(2), material)
+        object.position.y = 5
+        object.position.x = -5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.SphereGeometry(2, 25, 25, 0, Math.PI, 0, Math.PI/2), material)
+        object.position.y = 5
+        object.position.x = 5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.TorusGeometry(2, 1, 32, 32, Math.PI), material)
+        object.position.y = -5
+        object.position.x = -5
+        scene.add(object)
+
+        object = new THREE.Mesh(new THREE.RingGeometry(0.3, 2, 25, 10,0,  Math.PI), material)
+        object.position.y = -5
+        object.position.x = 5
+        scene.add(object)
+
+
+        camera.position.z = 15;
+        //newCamera.position.z = 5;
+        ///that function create a loop to animate the cube by default it's works with 60 frames per second
+        //var i = 0;
+
+        // this is for events
+        const controls = new OrbitControls(camera, renderer.domElement)
+
+        controls.minDistance = 1
+        controls.maxDistance = 10
+
+        //controls.enableZoom = false
+
+        //controls.enableRotate = false
+
+        controls.enableDamping = true
+        controls.dampingFactor = 0.5
+
+        controls.maxPolarAngle = Math.PI / 3
+
+        //controls.screenSpacePadding = true
+
+
+        window.addEventListener('resize', redimensionar)
+
+
+        function redimensionar() {
+            camera.aspect = window.innerWidth / window.innerHeight
+            camera.updateProjectionMatrix()
+            renderer.setSize(window.innerWidth, window.innerHeight)
+            renderer.render(scene, camera);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate); //to repeat the animation
+
+            /* camera.lookAt(newCamera.position)
+
+            camera.position.x = Math.cos(i) * 30
+            camera.position.z = Math.sin(i) * 30
+            i+= 0.001 */
+
+            /* cube.rotation.x += 0.001;
+            cube.rotation.y += 0.001; */
+
+            scene.traverse(function (object) {
+                if (object.isMesh == true) {
+                    object.rotation.x += 0.01;
+                    object.rotation.y += 0.01;
+                }
+
+            })
+
+
+            renderer.render(scene, camera);// to repeat the renderer
+        }
+        animate();
+
+    </script>
+</body>
+
+</html>
